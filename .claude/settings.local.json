@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f src/assets/react.svg src/assets/vite.svg src/assets/hero.png)",
+      "Bash(rmdir src/assets)",
+      "Bash(timeout 25 npm run dev)",
+      "Bash(npm audit *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(cd \"c:\\\\Users\\\\Microsoft\\\\percepta-id\" && nohup npm run dev > /tmp/dev.log 2>&1 & sleep 6 && curl -s http://localhost:5173/ | head -c 800 && echo \"---LOG---\" && cat /tmp/dev.log)",
+      "Read(//tmp/**)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(pkill -f \"npm run dev\")"
+    ]
+  }
+}
