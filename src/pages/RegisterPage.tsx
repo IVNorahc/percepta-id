@@ -20,14 +20,17 @@ export default function RegisterPage() {
     event.preventDefault()
     setError(null)
     setSubmitting(true)
-    const { error: signUpError } = await signUp(email, password, { companyName, sector, phone })
+    const { error: signUpError, hasSession } = await signUp(email, password, { companyName, sector, phone })
     setSubmitting(false)
     if (signUpError) {
       setError(signUpError)
       return
     }
-    setSuccess(true)
-    setTimeout(() => navigate('/login'), 2000)
+    if (hasSession) {
+      navigate('/dashboard', { replace: true })
+    } else {
+      setSuccess(true)
+    }
   }
 
   return (
@@ -44,7 +47,7 @@ export default function RegisterPage() {
 
           {success ? (
             <p className="mt-6 text-sm text-or">
-              Compte créé avec succès. Redirection vers la connexion...
+              Compte créé. Vérifiez votre email pour confirmer votre inscription.
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
