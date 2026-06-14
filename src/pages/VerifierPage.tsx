@@ -1,16 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Html5Qrcode } from 'html5-qrcode'
+import { useCallback, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useSettings } from '../lib/settings'
 import { formatDurationH } from '../lib/alerts'
-
-const QR_REGION_ID = 'qr-reader-region'
+import QrScanner from '../components/QrScanner'
 
 interface VerifiedLog {
   id: string
   fullName: string
   firstName: string | null
   idNumber: string
+  typePiece: string | null
   zone: string
   checkedInAt: string
   checkedOutAt: string | null
@@ -30,91 +29,36 @@ export default function VerifierPage() {
   const [result, setResult] = useState<VerifiedLog | null>(null)
   const [checkingOut, setCheckingOut] = useState(false)
 
-  const qrRef = useRef<Html5Qrcode | null>(null)
-  const processingRef = useRef(false)
-
-  const stopScanner = useCallback(async () => {
-    const inst = qrRef.current
-    qrRef.current = null
-    if (inst) {
-      try {
-        if (inst.isScanning) await inst.stop()
-      } catch {
-        /* déjà arrêté */
-      }
-      try {
-        inst.clear()
-      } catch {
-        /* ignore */
-      }
-    }
-  }, [])
-
-  const lookup = useCallback(
-    async (rawLogId: string) => {
-      const logId = rawLogId.trim()
-      setMode('loading')
-      const { data, error } = await supabase
-        .from('access_logs')
-        .select(
-          'id, full_name, first_name, id_number, zone, checked_in_at, checked_out_at, checkout_status, photo_url',
-        )
-        .eq('id', logId)
-        .maybeSingle()
-
-      if (error || !data) {
-        setResult(null)
-        setMode('notfound')
-        return
-      }
-      setResult({
-        id: data.id,
-        fullName: data.full_name,
-        firstName: data.first_name ?? null,
-        idNumber: data.id_number,
-        zone: data.zone,
-        checkedInAt: data.checked_in_at,
-        checkedOutAt: data.checked_out_at ?? null,
-        checkoutStatus: data.checkout_status ?? (data.checked_out_at ? 'departed' : 'present'),
-        photoUrl: data.photo_url ?? null,
-      })
-      setMode('result')
-    },
-    [],
-  )
-
-  const startScanner = useCallback(async () => {
-    processingRef.current = false
-    const el = document.getElementById(QR_REGION_ID)
-    if (!el) return
-    const html5 = new Html5Qrcode(QR_REGION_ID)
-    qrRef.current = html5
-    try {
-      await html5.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 260, height: 260 } },
-        async (decodedText) => {
-          if (processingRef.current) return
-          processingRef.current = true
-          await stopScanner()
-          await lookup(decodedText)
-        },
-        () => {
-          /* échecs de décodage par frame — ignorés */
-        },
+  const handleScan = useCallback(async (text: string) => {
+    setMode('loading')
+    const logId = text.trim()
+    const { data, error } = await supabase
+      .from('access_logs')
+      .select(
+        'id, full_name, first_name, id_number, type_piece, zone, checked_in_at, checked_out_at, checkout_status, photo_url',
       )
-    } catch {
-      setMode('error')
-    }
-  }, [lookup, stopScanner])
+      .eq('id', logId)
+      .maybeSingle()
 
-  // Démarre/arrête la caméra selon le mode.
-  useEffect(() => {
-    if (mode === 'scanning') startScanner()
-    return () => {
-      stopScanner()
+    if (error || !data) {
+      setResult(null)
+      setMode('notfound')
+      return
     }
-  }, [mode, startScanner, stopScanner])
+    setResult({
+      id: data.id,
+      fullName: data.full_name,
+      firstName: data.first_name ?? null,
+      idNumber: data.id_number,
+      typePiece: data.type_piece ?? null,
+      zone: data.zone,
+      checkedInAt: data.checked_in_at,
+      checkedOutAt: data.checked_out_at ?? null,
+      checkoutStatus: data.checkout_status ?? (data.checked_out_at ? 'departed' : 'present'),
+      photoUrl: data.photo_url ?? null,
+    })
+    setMode('result')
+  }, [])
 
   const handleCheckout = async () => {
     if (!result) return
@@ -146,11 +90,7 @@ export default function VerifierPage() {
     }
     const h = hoursSince(result.checkedInAt)
     if (h >= settings.thresholdWarningH) {
-      return {
-        label: '⚠️ ALERTE',
-        cls: 'bg-orange-500/15 text-orange-400 border-orange-500/40',
-        warn: true,
-      }
+      return { label: '⚠️ ALERTE', cls: 'bg-orange-500/15 text-orange-400 border-orange-500/40' }
     }
     return { label: '✅ SUR SITE', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40' }
   })()
@@ -158,7 +98,7 @@ export default function VerifierPage() {
   return (
     <div className="mx-auto max-w-xl animate-fade-in">
       <div className="text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Vérification de badge</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Vérification de badge visiteur</h1>
         <p className="mt-1 text-sm text-slate-400">
           Scannez le QR code d'un badge pour vérifier l'accès en temps réel.
         </p>
@@ -168,7 +108,7 @@ export default function VerifierPage() {
       {mode === 'scanning' && (
         <div className="mt-6">
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-black shadow-card">
-            <div id={QR_REGION_ID} className="w-full [&_video]:w-full [&_video]:object-cover" />
+            <QrScanner onScan={handleScan} onError={() => setMode('error')} />
           </div>
           <p className="mt-4 text-center text-sm text-slate-500">
             Placez le QR code du badge dans le cadre…
@@ -252,8 +192,13 @@ export default function VerifierPage() {
               <div className="min-w-0 flex-1">
                 <p className="font-display text-lg font-bold text-white">{displayName(result)}</p>
                 <p className="mt-0.5 font-mono text-xs text-slate-500">{result.idNumber}</p>
-                <div className="mt-3 inline-block rounded-md border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent">
-                  {result.zone}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="inline-block rounded-md border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent">
+                    {result.zone}
+                  </span>
+                  <span className="inline-block rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-medium text-slate-300">
+                    {result.typePiece ?? 'CNI'}
+                  </span>
                 </div>
               </div>
             </div>

@@ -9,7 +9,7 @@ const ADMIN_EMAIL = 'muhammadsamb@gmail.com'
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Tableau de bord' },
   { to: '/scan', label: 'Scanner' },
-  { to: '/verifier', label: 'Vérifier un badge' },
+  { to: '/verifier', label: 'Vérifier (visiteur)' },
   { to: '/personnel', label: 'Personnel' },
   { to: '/employes', label: 'Employés' },
   { to: '/pointage', label: 'Pointage' },
