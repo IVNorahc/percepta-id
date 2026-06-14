@@ -13,6 +13,10 @@ import AlertesPage from './pages/AlertesPage'
 import ParametresPage from './pages/ParametresPage'
 import AdminPage from './pages/AdminPage'
 import VerifierPage from './pages/VerifierPage'
+import EmployesPage from './pages/EmployesPage'
+import PointagePage from './pages/PointagePage'
+import PresencePage from './pages/PresencePage'
+import HistoriquePointagePage from './pages/HistoriquePointagePage'
 import { useAuth } from './contexts/AuthContext'
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
@@ -56,6 +60,46 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <VerifierPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employes"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <EmployesPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pointage"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <PointagePage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/presence"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <PresencePage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/historique-pointage"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <HistoriquePointagePage />
             </AppLayout>
           </ProtectedRoute>
         }
