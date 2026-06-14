@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAlerts } from '../lib/alerts'
+import DashboardCharts from '../components/DashboardCharts'
 
 interface DashboardStats {
   onSite: number
@@ -239,6 +240,9 @@ export default function DashboardPage() {
           )}
         </section>
       </div>
+
+      {/* Graphiques temps réel */}
+      <DashboardCharts />
     </div>
   )
 }
