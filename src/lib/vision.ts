@@ -10,8 +10,14 @@ import { supabase } from './supabase'
 
 export interface CniExtraction {
   rawText: string
+  type_piece: 'CNI' | 'PASSEPORT' | 'TITRE_SEJOUR' | 'PERMIS_CONDUIRE'
   fullName?: string
+  firstName?: string
   idNumber?: string
+  birthDate?: string
+  expiryDate?: string
+  nationality?: string
+  sex?: string
 }
 
 const VISION_PROXY_ENDPOINT = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/scan-cni`

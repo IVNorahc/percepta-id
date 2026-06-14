@@ -27,32 +27,32 @@ export default function RegisterPage() {
       return
     }
     if (hasSession) {
-      navigate('/dashboard', { replace: true })
+      navigate('/login', { replace: true })
     } else {
       setSuccess(true)
     }
   }
 
   return (
-    <div className="min-h-screen bg-noir text-white flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <Link to="/" className="block text-center text-xl font-semibold tracking-tight mb-8">
-          Percepta <span className="text-or">ID</span>
+    <div className="min-h-screen bg-nuit text-white flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md animate-fade-in">
+        <Link to="/" className="block text-center text-xl font-display font-bold tracking-tight mb-8">
+          Percepta <span className="text-accent">ID</span>
         </Link>
-        <div className="rounded-lg border border-white/10 p-8">
-          <h1 className="text-lg font-medium">Créer un compte entreprise</h1>
-          <p className="mt-1 text-sm text-gray-400">
+        <div className="rounded-xl border border-white/10 bg-ardoise p-8 shadow-lg">
+          <h1 className="text-lg font-display font-semibold">Créer un compte entreprise</h1>
+          <p className="mt-1 text-sm text-slate-400">
             Renseignez les informations de votre entreprise pour démarrer.
           </p>
 
           {success ? (
-            <p className="mt-6 text-sm text-or">
+            <p className="mt-6 text-sm text-accent">
               Compte créé. Vérifiez votre email pour confirmer votre inscription.
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div>
-                <label htmlFor="companyName" className="block text-sm text-gray-300">
+                <label htmlFor="companyName" className="block text-sm text-slate-300">
                   Nom de l'entreprise
                 </label>
                 <input
@@ -61,22 +61,22 @@ export default function RegisterPage() {
                   required
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-or"
+                  className="mt-1 w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
                 />
               </div>
 
               <div>
-                <label htmlFor="sector" className="block text-sm text-gray-300">
+                <label htmlFor="sector" className="block text-sm text-slate-300">
                   Secteur d'activité
                 </label>
                 <select
                   id="sector"
                   value={sector}
                   onChange={(e) => setSector(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-or"
+                  className="mt-1 w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
                 >
                   {SECTORS.map((option) => (
-                    <option key={option} value={option} className="bg-noir">
+                    <option key={option} value={option} className="bg-nuit">
                       {option}
                     </option>
                   ))}
@@ -84,7 +84,7 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm text-gray-300">
+                <label htmlFor="phone" className="block text-sm text-slate-300">
                   Téléphone
                 </label>
                 <input
@@ -94,12 +94,12 @@ export default function RegisterPage() {
                   placeholder="+221 77 000 00 00"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-or"
+                  className="mt-1 w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm text-gray-300">
+                <label htmlFor="email" className="block text-sm text-slate-300">
                   Email
                 </label>
                 <input
@@ -108,12 +108,12 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-or"
+                  className="mt-1 w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm text-gray-300">
+                <label htmlFor="password" className="block text-sm text-slate-300">
                   Mot de passe
                 </label>
                 <input
@@ -123,7 +123,7 @@ export default function RegisterPage() {
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-or"
+                  className="mt-1 w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
                 />
               </div>
 
@@ -132,16 +132,16 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-md bg-or px-4 py-2 font-medium text-noir hover:bg-or/90 transition-colors disabled:opacity-50"
+                className="w-full rounded-md bg-accent px-4 py-2 font-medium text-white hover:bg-accent-sombre transition-colors disabled:opacity-50"
               >
                 {submitting ? 'Création...' : 'Créer mon compte'}
               </button>
             </form>
           )}
 
-          <p className="mt-6 text-center text-sm text-gray-400">
+          <p className="mt-6 text-center text-sm text-slate-400">
             Déjà un compte ?{' '}
-            <Link to="/login" className="text-or hover:underline">
+            <Link to="/login" className="text-accent hover:underline">
               Se connecter
             </Link>
           </p>

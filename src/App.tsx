@@ -9,6 +9,17 @@ import DashboardPage from './pages/DashboardPage'
 import ScanPage from './pages/ScanPage'
 import PersonnelPage from './pages/PersonnelPage'
 import RapportsPage from './pages/RapportsPage'
+import AlertesPage from './pages/AlertesPage'
+import ParametresPage from './pages/ParametresPage'
+import AdminPage from './pages/AdminPage'
+import { useAuth } from './contexts/AuthContext'
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (user?.email !== 'muhammadsamb@gmail.com') return <Navigate to="/dashboard" replace />
+  return <>{children}</>
+}
 
 function App() {
   return (
@@ -55,6 +66,41 @@ function App() {
             <AppLayout>
               <RapportsPage />
             </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/alertes"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <AlertesPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/parametres"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ParametresPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminRoute>
+              <AppLayout>
+                <AdminPage />
+              </AppLayout>
+            </AdminRoute>
           </ProtectedRoute>
         }
       />

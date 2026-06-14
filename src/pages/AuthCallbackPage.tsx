@@ -10,7 +10,6 @@ export default function AuthCallbackPage() {
     const code = new URLSearchParams(window.location.search).get('code')
 
     if (!code) {
-      // No code parameter — redirect to login (expired link or direct navigation)
       navigate('/login', { replace: true })
       return
     }
@@ -28,10 +27,10 @@ export default function AuthCallbackPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-noir flex items-center justify-center px-4">
+      <div className="min-h-screen bg-nuit flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center space-y-4">
           <p className="text-red-400 text-sm">{error}</p>
-          <a href="/login" className="text-or text-sm underline">
+          <a href="/login" className="text-accent text-sm underline">
             Retour à la connexion
           </a>
         </div>
@@ -40,8 +39,8 @@ export default function AuthCallbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-noir flex items-center justify-center">
-      <p className="text-gray-400 text-sm">Confirmation en cours...</p>
+    <div className="min-h-screen bg-nuit flex items-center justify-center">
+      <p className="text-slate-400 text-sm">Confirmation en cours...</p>
     </div>
   )
 }
