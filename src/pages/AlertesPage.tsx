@@ -185,6 +185,11 @@ function AlertCard({
                 Zone dangereuse
               </span>
             )}
+            {alert.type === 'id_expired' && (
+              <span className="inline-block rounded-full px-2 py-0.5 text-xs bg-red-900/40 text-red-200">
+                🪪 Pièce expirée
+              </span>
+            )}
           </div>
           <p className="mt-2 font-medium text-white">
             {alert.firstName ? `${alert.firstName} ${alert.fullName}` : alert.fullName}

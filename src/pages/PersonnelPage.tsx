@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import BadgeModal, { type BadgeData } from '../components/BadgeModal'
 import { useSettings } from '../lib/settings'
+import { isIdExpired } from '../lib/alerts'
 
 interface PersonRecord {
   id: string
@@ -13,6 +14,7 @@ interface PersonRecord {
   company: string | null
   birthDate: string | null
   nationality: string | null
+  expiryDate: string | null
   checkedInAt: string
   checkedOutAt: string | null
   checkoutStatus: 'present' | 'departed'
@@ -29,6 +31,7 @@ export default function PersonnelPage() {
   const [search, setSearch] = useState('')
   const [zoneFilter, setZoneFilter] = useState(ALL_ZONES)
   const [statusFilter, setStatusFilter] = useState<'all' | 'present' | 'departed'>('all')
+  const [expiredOnly, setExpiredOnly] = useState(false)
   const [selected, setSelected] = useState<PersonRecord | null>(null)
   const [checkingOut, setCheckingOut] = useState<string | null>(null)
   const [badgeRecord, setBadgeRecord] = useState<BadgeData | null>(null)
@@ -40,7 +43,7 @@ export default function PersonnelPage() {
       const { data } = await supabase
         .from('access_logs')
         .select(
-          'id, full_name, first_name, id_number, zone, reason, company, birth_date, nationality, checked_in_at, checked_out_at, checkout_status, photo_url',
+          'id, full_name, first_name, id_number, zone, reason, company, birth_date, nationality, expiry_date, checked_in_at, checked_out_at, checkout_status, photo_url',
         )
         .order('checked_in_at', { ascending: false })
 
@@ -57,6 +60,7 @@ export default function PersonnelPage() {
           company: r.company ?? null,
           birthDate: r.birth_date ?? null,
           nationality: r.nationality ?? null,
+          expiryDate: r.expiry_date ?? null,
           checkedInAt: r.checked_in_at,
           checkedOutAt: r.checked_out_at,
           checkoutStatus: r.checkout_status ?? (r.checked_out_at ? 'departed' : 'present'),
@@ -80,9 +84,10 @@ export default function PersonnelPage() {
         statusFilter === 'all' ||
         (statusFilter === 'present' && r.checkoutStatus === 'present') ||
         (statusFilter === 'departed' && r.checkoutStatus === 'departed')
-      return matchesSearch && matchesZone && matchesStatus
+      const matchesExpired = !expiredOnly || isIdExpired(r.expiryDate)
+      return matchesSearch && matchesZone && matchesStatus && matchesExpired
     })
-  }, [records, search, zoneFilter, statusFilter])
+  }, [records, search, zoneFilter, statusFilter, expiredOnly])
 
   const history = useMemo(
     () => (selected ? records.filter((r) => r.idNumber === selected.idNumber) : []),
@@ -147,6 +152,17 @@ export default function PersonnelPage() {
           <option value="present" className="bg-nuit">Sur site</option>
           <option value="departed" className="bg-nuit">Sortis</option>
         </select>
+        <button
+          type="button"
+          onClick={() => setExpiredOnly((v) => !v)}
+          className={`shrink-0 rounded-md border px-3 py-2 text-sm transition-colors ${
+            expiredOnly
+              ? 'border-red-500/50 bg-red-500/10 text-red-400'
+              : 'border-white/10 text-slate-400 hover:border-red-500/40 hover:text-red-400'
+          }`}
+        >
+          ⚠️ Pièces expirées
+        </button>
       </div>
 
       {/* Tableau */}
@@ -193,7 +209,14 @@ export default function PersonnelPage() {
                   onClick={() => setSelected(record)}
                   className={`cursor-pointer hover:bg-white/5 transition-colors ${selected?.id === record.id ? 'bg-white/5' : ''}`}
                 >
-                  <td className="px-4 py-3 text-white max-w-[140px] truncate">{displayName(record)}</td>
+                  <td className="px-4 py-3 text-white max-w-[160px]">
+                    <p className="truncate">{displayName(record)}</p>
+                    {isIdExpired(record.expiryDate) && (
+                      <span className="mt-1 inline-block rounded-full bg-red-500/15 border border-red-500/30 px-2 py-0.5 text-xs font-medium text-red-400">
+                        Pièce expirée
+                      </span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-slate-400 hidden sm:table-cell font-mono text-xs">{record.idNumber}</td>
                   <td className="px-4 py-3 text-slate-400 hidden md:table-cell">{record.zone}</td>
                   <td className="px-4 py-3 text-slate-400 hidden lg:table-cell">{record.company ?? '—'}</td>

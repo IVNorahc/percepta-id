@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import { extractCniFromImage, type CniExtraction } from '../lib/vision'
 import BadgeModal, { type BadgeData } from '../components/BadgeModal'
 import { useSettings } from '../lib/settings'
+import { isIdExpired, parseFlexibleDate, formatDateFr } from '../lib/alerts'
 
 type ScanStep = 'recto' | 'verso' | 'form'
 
@@ -369,6 +370,19 @@ export default function ScanPage() {
       {/* ── Étape 3 : Formulaire final ── */}
       {scanStep === 'form' && (
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+
+          {/* Bandeau pièce expirée */}
+          {isIdExpired(expiryDate) && (
+            <div className="rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3">
+              <p className="text-sm font-semibold text-red-300">
+                ⚠️ PIÈCE D'IDENTITÉ EXPIRÉE
+              </p>
+              <p className="mt-0.5 text-xs text-red-200/80">
+                Cette pièce a expiré le {formatDateFr(parseFlexibleDate(expiryDate)!)}. Vérifiez la
+                validité avant d'autoriser l'accès.
+              </p>
+            </div>
+          )}
 
           {/* Aperçus recto / verso + bouton rescanner */}
           {(rectoPreview || versoPreview) && (
