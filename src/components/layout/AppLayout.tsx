@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useAlerts } from '../../lib/alerts'
 import { useSettings } from '../../lib/settings'
+import StorageImage from '../StorageImage'
 
 const ADMIN_EMAIL = 'muhammadsamb@gmail.com'
 
@@ -62,9 +63,7 @@ function NavLinks({
 function Brand({ logoUrl, name, sizeCls }: { logoUrl: string | null; name: string; sizeCls: string }) {
   return (
     <span className="flex items-center gap-2 min-w-0">
-      {logoUrl && (
-        <img src={logoUrl} alt="" className="h-7 w-7 shrink-0 rounded object-contain" />
-      )}
+      <StorageImage src={logoUrl} alt="" className="h-7 w-7 shrink-0 rounded object-contain" />
       <span className={`${sizeCls} font-display font-bold tracking-tight truncate`}>{name}</span>
     </span>
   )

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { exportToCsv, exportToPdf, type ExportColumn } from '../lib/export'
 import { useSettings } from '../lib/settings'
+import { getSignedUrl } from '../lib/storage'
 
 interface AccessRow {
   id: string
@@ -206,13 +207,14 @@ export default function RapportsPage() {
   const handleExportPdf = async () => {
     setExporting('pdf')
     try {
+      const signedLogo = await getSignedUrl(settings.logoUrl)
       await exportToPdf(
         {
           title: 'Rapport des présences',
           subtitle: periodLabel,
           columns: EXPORT_COLUMNS,
           companyName: settings.companyName,
-          logoUrl: settings.logoUrl,
+          logoUrl: signedLogo,
         },
         buildExportRows(),
       )

@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useSettings } from '../lib/settings'
 import { extractCniFromImage } from '../lib/vision'
 import EmployeeBadgeModal, { type EmployeeBadge } from '../components/EmployeeBadgeModal'
+import StorageImage from '../components/StorageImage'
 
 interface Employee {
   id: string
@@ -124,7 +125,7 @@ export default function EmployesPage() {
         const path = `employees/${Date.now()}-${photoFile.name}`
         const { error: upErr } = await supabase.storage.from('documents').upload(path, photoFile)
         if (upErr) throw upErr
-        photoUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl
+        photoUrl = path // bucket privé : on stocke le chemin, affichage via URL signée
       }
       const { error } = await supabase.from('employees').insert({
         company_id: companyId,
@@ -220,11 +221,11 @@ export default function EmployesPage() {
                 <tr key={emp.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      {emp.photo_url ? (
-                        <img src={emp.photo_url} alt="" className="h-9 w-9 rounded-full object-cover border border-white/10" />
-                      ) : (
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-nuit border border-white/10 text-slate-500">👤</div>
-                      )}
+                      <StorageImage
+                        src={emp.photo_url}
+                        className="h-9 w-9 rounded-full object-cover border border-white/10"
+                        fallback={<div className="flex h-9 w-9 items-center justify-center rounded-full bg-nuit border border-white/10 text-slate-500">👤</div>}
+                      />
                       <div className="min-w-0">
                         <p className="text-white truncate">{emp.prenoms} {emp.nom}</p>
                         <p className="text-xs text-slate-500 sm:hidden">{emp.poste ?? '—'}</p>

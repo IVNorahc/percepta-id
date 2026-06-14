@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import StorageImage from '../components/StorageImage'
 
 interface Emp {
   id: string
@@ -124,11 +125,11 @@ export default function PresencePage() {
               {present.map((e) => (
                 <li key={e.id} className="flex items-center justify-between gap-3 py-2.5">
                   <div className="flex items-center gap-3 min-w-0">
-                    {e.photo_url ? (
-                      <img src={e.photo_url} alt="" className="h-8 w-8 rounded-full object-cover border border-white/10" />
-                    ) : (
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-nuit border border-white/10 text-xs text-slate-500">👤</div>
-                    )}
+                    <StorageImage
+                      src={e.photo_url}
+                      className="h-8 w-8 rounded-full object-cover border border-white/10"
+                      fallback={<div className="flex h-8 w-8 items-center justify-center rounded-full bg-nuit border border-white/10 text-xs text-slate-500">👤</div>}
+                    />
                     <div className="min-w-0">
                       <p className="text-sm text-white truncate">{e.prenoms} {e.nom}</p>
                       <p className="text-xs text-slate-500 truncate">{e.poste ?? '—'}</p>
@@ -154,11 +155,11 @@ export default function PresencePage() {
             <ul className="mt-4 divide-y divide-white/5">
               {absent.map((e) => (
                 <li key={e.id} className="flex items-center gap-3 py-2.5">
-                  {e.photo_url ? (
-                    <img src={e.photo_url} alt="" className="h-8 w-8 rounded-full object-cover border border-white/10 opacity-60" />
-                  ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-nuit border border-white/10 text-xs text-slate-600">👤</div>
-                  )}
+                  <StorageImage
+                    src={e.photo_url}
+                    className="h-8 w-8 rounded-full object-cover border border-white/10 opacity-60"
+                    fallback={<div className="flex h-8 w-8 items-center justify-center rounded-full bg-nuit border border-white/10 text-xs text-slate-600">👤</div>}
+                  />
                   <div className="min-w-0">
                     <p className="text-sm text-slate-400 truncate">{e.prenoms} {e.nom}</p>
                     <p className="text-xs text-slate-600 truncate">{e.poste ?? '—'}</p>

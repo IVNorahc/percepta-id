@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import { useSettings } from '../lib/settings'
 import { formatDurationH } from '../lib/alerts'
 import QrScanner from '../components/QrScanner'
+import StorageImage from '../components/StorageImage'
 
 interface VerifiedLog {
   id: string
@@ -178,17 +179,15 @@ export default function VerifierPage() {
           {/* Carte identité */}
           <div className="rounded-2xl border border-white/10 bg-ardoise p-5 shadow-card">
             <div className="flex gap-4">
-              {result.photoUrl ? (
-                <img
-                  src={result.photoUrl}
-                  alt=""
-                  className="h-28 w-24 shrink-0 rounded-lg border border-white/10 object-cover"
-                />
-              ) : (
-                <div className="flex h-28 w-24 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-nuit text-4xl text-slate-600">
-                  👤
-                </div>
-              )}
+              <StorageImage
+                src={result.photoUrl}
+                className="h-28 w-24 shrink-0 rounded-lg border border-white/10 object-cover"
+                fallback={
+                  <div className="flex h-28 w-24 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-nuit text-4xl text-slate-600">
+                    👤
+                  </div>
+                }
+              />
               <div className="min-w-0 flex-1">
                 <p className="font-display text-lg font-bold text-white">{displayName(result)}</p>
                 <p className="mt-0.5 font-mono text-xs text-slate-500">{result.idNumber}</p>

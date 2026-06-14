@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { useSettings, type ZoneConfig } from '../lib/settings'
+import StorageImage from '../components/StorageImage'
 
 // ── Zone colors ──────────────────────────────────────────────────────────────
 
@@ -74,7 +75,7 @@ function SaveRow({ saving, saved, error, onSave }: {
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function ParametresPage() {
-  const { user } = useAuth()
+  const { user, companyId } = useAuth()
   const { settings, loading, save } = useSettings()
   const syncedRef = useRef(false)
 
@@ -157,14 +158,15 @@ export default function ParametresPage() {
     if (!file) return
     setLogoUploading(true)
     const ext = file.name.split('.').pop() ?? 'jpg'
-    const path = `logos/company-logo.${ext}`
+    // Chemin par entreprise (évite les collisions multi-tenant) + horodatage
+    // (busting du cache d'URL signée à chaque changement).
+    const path = `logos/${companyId ?? 'default'}-${Date.now()}.${ext}`
     const { error } = await supabase.storage
       .from('documents')
       .upload(path, file, { upsert: true })
     if (!error) {
-      const { data } = supabase.storage.from('documents').getPublicUrl(path)
-      setLogoUrl(data.publicUrl)
-      await save({ logoUrl: data.publicUrl })
+      setLogoUrl(path)
+      await save({ logoUrl: path })
     }
     setLogoUploading(false)
     // reset input so same file can be re-selected
@@ -295,11 +297,12 @@ export default function ParametresPage() {
         {/* Logo */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 mb-6">
           <div className="w-20 h-20 rounded-lg border border-white/10 bg-nuit flex items-center justify-center shrink-0 overflow-hidden">
-            {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
-            ) : (
-              <span className="text-3xl text-slate-600">🏢</span>
-            )}
+            <StorageImage
+              src={logoUrl}
+              alt="Logo"
+              className="w-full h-full object-contain"
+              fallback={<span className="text-3xl text-slate-600">🏢</span>}
+            />
           </div>
           <div className="min-w-0">
             <p className="text-sm text-slate-300 mb-2">Logo de l'entreprise</p>

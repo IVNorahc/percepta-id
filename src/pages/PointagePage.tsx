@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import QrScanner from '../components/QrScanner'
+import StorageImage from '../components/StorageImage'
 
 interface Emp {
   id: string
@@ -126,11 +127,11 @@ export default function PointagePage() {
         <div className="mt-6 space-y-5">
           <div className="rounded-2xl border border-white/10 bg-ardoise p-5 shadow-card">
             <div className="flex gap-4">
-              {emp.photo_url ? (
-                <img src={emp.photo_url} alt="" className="h-24 w-24 shrink-0 rounded-lg object-cover border border-white/10" />
-              ) : (
-                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-nuit text-4xl text-slate-600">👤</div>
-              )}
+              <StorageImage
+                src={emp.photo_url}
+                className="h-24 w-24 shrink-0 rounded-lg object-cover border border-white/10"
+                fallback={<div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-nuit text-4xl text-slate-600">👤</div>}
+              />
               <div className="min-w-0 flex-1">
                 <p className="font-display text-lg font-bold text-white">{emp.prenoms} {emp.nom}</p>
                 {emp.poste && <p className="mt-0.5 text-sm text-slate-400">{emp.poste}</p>}

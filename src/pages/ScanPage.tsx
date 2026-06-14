@@ -188,12 +188,14 @@ export default function ScanPage() {
     setPhotoPreview(URL.createObjectURL(file))
   }
 
+  // Retourne le chemin interne au bucket (bucket privé → pas d'URL publique ;
+  // l'affichage se fait via URLs signées).
   const uploadIfPresent = async (file: File | null, bucket: string, prefix: string) => {
     if (!file) return null
     const path = `${prefix}/${Date.now()}-${file.name}`
     const { error: uploadError } = await supabase.storage.from(bucket).upload(path, file)
     if (uploadError) throw uploadError
-    return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl
+    return path
   }
 
   const resetAll = () => {
