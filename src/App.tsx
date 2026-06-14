@@ -12,6 +12,7 @@ import RapportsPage from './pages/RapportsPage'
 import AlertesPage from './pages/AlertesPage'
 import ParametresPage from './pages/ParametresPage'
 import AdminPage from './pages/AdminPage'
+import VerifierPage from './pages/VerifierPage'
 import { useAuth } from './contexts/AuthContext'
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
@@ -45,6 +46,16 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <ScanPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/verifier"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <VerifierPage />
             </AppLayout>
           </ProtectedRoute>
         }
