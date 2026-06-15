@@ -61,6 +61,10 @@ export default function AdminPage() {
   const [companiesLoading, setCompaniesLoading] = useState(true)
   const [selectedCompany, setSelectedCompany] = useState<string>('all')
 
+  // ── Création de compte ────────────────────────────────────────────────────
+  const [form, setForm] = useState({ email: '', displayName: '', role: 'agent', companyId: '' })
+  const [creating, setCreating] = useState(false)
+
   const showToast = (msg: string, ok: boolean) => {
     setToast({ msg, ok })
     setTimeout(() => setToast(null), 3500)
@@ -144,6 +148,35 @@ export default function AdminPage() {
       )
     }
     setBusy(null)
+  }
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.email.trim() || !form.companyId) {
+      showToast('Email et entreprise requis.', false)
+      return
+    }
+    setCreating(true)
+    const { data, error } = await callAdmin<{ ok: boolean; emailSent: boolean }>({
+      action: 'createUser',
+      email: form.email.trim(),
+      displayName: form.displayName.trim(),
+      role: form.role,
+      companyId: form.companyId,
+    })
+    if (error) {
+      showToast(`Erreur création : ${error}`, false)
+    } else {
+      showToast(
+        data?.emailSent
+          ? 'Compte créé — identifiants envoyés par email.'
+          : 'Compte créé (email non envoyé, vérifiez la configuration).',
+        true,
+      )
+      setForm({ email: '', displayName: '', role: 'agent', companyId: '' })
+      load()
+    }
+    setCreating(false)
   }
 
   const total = users.length
@@ -248,6 +281,73 @@ export default function AdminPage() {
             </table>
           </div>
         )}
+      </div>
+
+      {/* ── Créer un compte ─────────────────────────────────────────────── */}
+      <div className="rounded-xl border border-white/10 bg-ardoise overflow-hidden shadow-card">
+        <div className="px-6 py-4 border-b border-white/10">
+          <h2 className="text-sm font-semibold text-slate-300">Créer un compte</h2>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Le compte est créé avec un mot de passe temporaire envoyé par email à l'utilisateur.
+          </p>
+        </div>
+        <form onSubmit={handleCreate} className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5">Email</label>
+            <input
+              type="email"
+              required
+              value={form.email}
+              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+              placeholder="agent@entreprise.com"
+              className="w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5">Nom</label>
+            <input
+              type="text"
+              value={form.displayName}
+              onChange={(e) => setForm((f) => ({ ...f, displayName: e.target.value }))}
+              placeholder="Nom complet"
+              className="w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5">Rôle</label>
+            <select
+              value={form.role}
+              onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
+              className="w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
+            >
+              <option value="agent" className="bg-nuit">Agent</option>
+              <option value="manager" className="bg-nuit">Responsable</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5">Entreprise</label>
+            <select
+              required
+              value={form.companyId}
+              onChange={(e) => setForm((f) => ({ ...f, companyId: e.target.value }))}
+              className="w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
+            >
+              <option value="" className="bg-nuit">Choisir une entreprise…</option>
+              {companies.map((c) => (
+                <option key={c.id} value={c.id} className="bg-nuit">{c.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="sm:col-span-2">
+            <button
+              type="submit"
+              disabled={creating || companiesLoading}
+              className="rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-sombre transition-colors disabled:opacity-50"
+            >
+              {creating ? 'Création…' : 'Créer le compte'}
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Table */}

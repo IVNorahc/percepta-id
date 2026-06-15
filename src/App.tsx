@@ -27,12 +27,27 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
+// La création de comptes est réservée à l'admin : tout autre cas → /login.
+function RegisterRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (user?.email !== 'muhammadsamb@gmail.com') return <Navigate to="/login" replace />
+  return <>{children}</>
+}
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route
+        path="/register"
+        element={
+          <RegisterRoute>
+            <RegisterPage />
+          </RegisterRoute>
+        }
+      />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
       <Route

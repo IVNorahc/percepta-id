@@ -71,13 +71,6 @@ export default function LoginPage() {
               {submitting ? 'Connexion...' : 'Se connecter'}
             </button>
           </form>
-
-          <p className="mt-6 text-center text-sm text-slate-400">
-            Pas encore de compte ?{' '}
-            <Link to="/register" className="text-accent hover:underline">
-              Créer un compte
-            </Link>
-          </p>
         </div>
       </div>
     </div>
