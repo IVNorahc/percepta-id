@@ -2,8 +2,49 @@ import { useState, type ReactNode } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useAlerts } from '../../lib/alerts'
+import { useAlertNotifier } from '../../lib/alertNotifications'
 import { useSettings } from '../../lib/settings'
+import { useIdleTimer } from '../../hooks/useIdleTimer'
 import StorageImage from '../StorageImage'
+
+function formatMmSs(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60)
+  const s = totalSeconds % 60
+  return `${m}:${String(s).padStart(2, '0')}`
+}
+
+function IdleWarningModal({ remaining, onStay, onLogout }: { remaining: number; onStay: () => void; onLogout: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 px-4">
+      <div className="w-full max-w-sm rounded-xl border border-white/10 bg-ardoise p-6 text-center shadow-2xl">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/15">
+          <svg className="h-6 w-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M10.29 3.86l-8.18 14.14A1 1 0 003 19.5h18a1 1 0 00.89-1.5L13.71 3.86a1 1 0 00-1.72 0z" />
+          </svg>
+        </div>
+        <h2 className="text-lg font-display font-bold text-white">Toujours là&nbsp;?</h2>
+        <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+          Vous allez être déconnecté pour inactivité dans{' '}
+          <span className="font-semibold text-white tabular-nums">{formatMmSs(remaining)}</span>.
+        </p>
+        <div className="mt-6 flex flex-col gap-2">
+          <button
+            onClick={onStay}
+            className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent/90"
+          >
+            Rester connecté
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full rounded-lg border border-white/10 px-4 py-2.5 text-sm text-slate-300 transition-colors hover:border-accent hover:text-accent"
+          >
+            Se déconnecter maintenant
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const ADMIN_EMAIL = 'muhammadsamb@gmail.com'
 
@@ -74,6 +115,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
   const { alerts } = useAlerts()
+  useAlertNotifier(alerts)
   const { settings } = useSettings()
   const alertCount = alerts.filter((a) => !a.isAcked).length
   const isAdmin = user?.email === ADMIN_EMAIL
@@ -83,8 +125,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
     navigate('/login')
   }
 
+  // Déconnexion automatique après 30 min d'inactivité (avertissement 2 min avant).
+  const { warning, remaining, stayActive } = useIdleTimer({
+    enabled: !!user,
+    onIdle: handleLogout,
+  })
+
   return (
     <div className="min-h-screen bg-nuit text-white flex">
+      {warning && (
+        <IdleWarningModal remaining={remaining} onStay={stayActive} onLogout={handleLogout} />
+      )}
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-64 shrink-0 border-r border-white/10 flex-col bg-ardoise">
         <div className="px-6 py-5 border-b border-white/10">
