@@ -4,6 +4,7 @@ import { extractCniFromImage, type CniExtraction } from '../lib/vision'
 import BadgeModal, { type BadgeData } from '../components/BadgeModal'
 import { useSettings } from '../lib/settings'
 import { isIdExpired, parseFlexibleDate, formatDateFr } from '../lib/alerts'
+import { useAuth } from '../contexts/AuthContext'
 
 type ScanStep = 'recto' | 'verso' | 'form'
 
@@ -38,6 +39,7 @@ function Field({
 
 export default function ScanPage() {
   const { settings } = useSettings()
+  const { companyId } = useAuth()
   const zones = settings.zones.map((z) => z.name)
 
   const cniInputRef = useRef<HTMLInputElement>(null)
@@ -192,7 +194,7 @@ export default function ScanPage() {
   // l'affichage se fait via URLs signées).
   const uploadIfPresent = async (file: File | null, bucket: string, prefix: string) => {
     if (!file) return null
-    const path = `${prefix}/${Date.now()}-${file.name}`
+    const path = `${companyId ?? 'shared'}/${prefix}/${Date.now()}-${file.name}`
     const { error: uploadError } = await supabase.storage.from(bucket).upload(path, file)
     if (uploadError) throw uploadError
     return path

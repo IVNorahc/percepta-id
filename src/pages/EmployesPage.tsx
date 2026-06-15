@@ -122,7 +122,7 @@ export default function EmployesPage() {
     try {
       let photoUrl: string | null = null
       if (photoFile) {
-        const path = `employees/${Date.now()}-${photoFile.name}`
+        const path = `${companyId ?? 'shared'}/employees/${Date.now()}-${photoFile.name}`
         const { error: upErr } = await supabase.storage.from('documents').upload(path, photoFile)
         if (upErr) throw upErr
         photoUrl = path // bucket privé : on stocke le chemin, affichage via URL signée

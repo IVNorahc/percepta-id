@@ -160,7 +160,7 @@ export default function ParametresPage() {
     const ext = file.name.split('.').pop() ?? 'jpg'
     // Chemin par entreprise (évite les collisions multi-tenant) + horodatage
     // (busting du cache d'URL signée à chaque changement).
-    const path = `logos/${companyId ?? 'default'}-${Date.now()}.${ext}`
+    const path = `${companyId ?? 'shared'}/logos/${Date.now()}.${ext}`
     const { error } = await supabase.storage
       .from('documents')
       .upload(path, file, { upsert: true })
