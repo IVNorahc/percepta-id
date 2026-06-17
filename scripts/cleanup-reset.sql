@@ -4,14 +4,18 @@
 -- À exécuter dans Supabase → SQL Editor (rôle privilégié).
 --
 -- Effet : supprime TOUTES les données de test (entrées, employés, pointages,
--- alertes, paramètres), TOUS les fichiers Storage, TOUS les comptes sauf
--- l'admin, et TOUTES les entreprises ; puis crée UNE entreprise cliente vierge
--- prête à l'emploi.
+-- alertes, paramètres), TOUS les comptes sauf l'admin, et TOUTES les
+-- entreprises ; puis crée UNE entreprise cliente vierge prête à l'emploi.
+--
+-- ⚠️ Le Storage (bucket "documents") n'est PAS vidé par ce script : Supabase
+--    protège storage.objects contre le DELETE en SQL. Purge-le manuellement
+--    via le Dashboard (Storage → documents → Select all → Delete).
 --
 -- ⚠️ IRRÉVERSIBLE. Fais une sauvegarde (Database → Backups) avant de lancer.
+--
+-- 👉 Nom du client en dur ci-dessous ('Entreprise cliente') — modifie les deux
+--    occurrences à la section 5 si besoin.
 -- ============================================================================
-
-\set client_name 'Entreprise cliente'
 
 begin;
 
@@ -23,11 +27,9 @@ delete from public.alert_notifications;
 delete from public.access_logs;
 delete from public.company_settings;
 
--- ── 1bis. Storage : vider le bucket "documents" (photos CNI, employés, logos) ─
--- Supprime les enregistrements d'objets. Pour purger aussi les octets côté
--- backend, vide le bucket depuis le Dashboard (Storage → documents → Select all
--- → Delete) ou via l'API service role.
-delete from storage.objects where bucket_id = 'documents';
+-- ── Storage : à vider MANUELLEMENT via le Dashboard ────────────────────────
+-- Supabase protège storage.objects contre le DELETE direct en SQL.
+-- Purge le bucket depuis : Storage → documents → Select all → Delete.
 
 -- ── 2. Comptes : supprimer tous les utilisateurs sauf l'admin ───────────────
 -- La suppression dans auth.users cascade vers public.profiles (FK on delete cascade)
@@ -51,11 +53,11 @@ where email = 'muhammadsamb@gmail.com';
 -- ── 5. Amorçage : UNE entreprise cliente vierge + ses paramètres ────────────
 with new_co as (
   insert into public.companies (name)
-  values (:'client_name')
+  values ('Entreprise cliente')
   returning id
 )
 insert into public.company_settings (company_id, company_name)
-select id, :'client_name' from new_co;
+select id, 'Entreprise cliente' from new_co;
 
 commit;
 
