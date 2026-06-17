@@ -146,13 +146,25 @@ Deno.serve(async (req) => {
       if (!email) return json({ error: 'Email requis' }, 400)
       if (!companyId) return json({ error: 'Entreprise requise' }, 400)
 
-      // L'entreprise doit exister.
-      const { data: company, error: companyErr } = await admin
+      // ── Verrou d'exclusivité : une seule entreprise cliente par instance ────
+      // On ne peut ajouter des utilisateurs qu'à l'entreprise déjà existante.
+      const { data: allCompanies, error: companiesErr } = await admin
         .from('companies')
         .select('id, name')
-        .eq('id', companyId)
-        .single()
-      if (companyErr || !company) return json({ error: 'Entreprise introuvable' }, 400)
+        .order('created_at', { ascending: true })
+      if (companiesErr) return json({ error: companiesErr.message }, 500)
+
+      const company = (allCompanies ?? []).find((c) => c.id === companyId)
+      if (!company) {
+        // Si une entreprise existe déjà, refuser toute nouvelle entreprise.
+        if ((allCompanies ?? []).length > 0) {
+          return json(
+            { error: "Limite d'entreprise atteinte — Cette instance est exclusive à une seule entreprise cliente" },
+            403,
+          )
+        }
+        return json({ error: 'Entreprise introuvable' }, 400)
+      }
 
       // Création du compte : le trigger handle_new_user lira company_id/role/display_name.
       const password = generateTempPassword()

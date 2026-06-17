@@ -117,6 +117,11 @@ export default function AdminPage() {
   useEffect(() => { load() }, [load])
   useEffect(() => { loadCompanies() }, [loadCompanies])
 
+  // Exclusivité : une seule entreprise cliente → le formulaire est verrouillé dessus.
+  useEffect(() => {
+    if (companies.length > 0) setForm((f) => ({ ...f, companyId: companies[0].id }))
+  }, [companies])
+
   const handleDelete = async (userId: string) => {
     setBusy(userId)
     const { error } = await callAdmin({ action: 'deleteUser', userId })
@@ -183,6 +188,9 @@ export default function AdminPage() {
   const active = users.filter((u) => !isBanned(u)).length
   const suspended = users.filter((u) => isBanned(u)).length
 
+  // Exclusivité contractuelle : une seule entreprise cliente.
+  const lockedCompany = companies[0] ?? null
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
       {/* Header */}
@@ -192,6 +200,11 @@ export default function AdminPage() {
           <p className="mt-1 text-sm text-slate-400">
             Gestion des comptes — accès réservé au maintenancier
           </p>
+          {!companiesLoading && (
+            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300">
+              🔒 Instance exclusive — {companies.length}/1 entreprise
+            </span>
+          )}
         </div>
         <button
           onClick={load}
@@ -326,22 +339,16 @@ export default function AdminPage() {
           </div>
           <div>
             <label className="block text-xs text-slate-400 mb-1.5">Entreprise</label>
-            <select
-              required
-              value={form.companyId}
-              onChange={(e) => setForm((f) => ({ ...f, companyId: e.target.value }))}
-              className="w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none focus:border-accent"
-            >
-              <option value="" className="bg-nuit">Choisir une entreprise…</option>
-              {companies.map((c) => (
-                <option key={c.id} value={c.id} className="bg-nuit">{c.name}</option>
-              ))}
-            </select>
+            {/* Exclusivité : entreprise unique, non modifiable. */}
+            <div className="flex items-center gap-2 w-full rounded-md border border-white/10 bg-nuit/60 px-3 py-2 text-sm text-slate-300">
+              <span>🔒</span>
+              <span className="truncate">{lockedCompany ? lockedCompany.name : 'Aucune entreprise'}</span>
+            </div>
           </div>
           <div className="sm:col-span-2">
             <button
               type="submit"
-              disabled={creating || companiesLoading}
+              disabled={creating || companiesLoading || !lockedCompany}
               className="rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-sombre transition-colors disabled:opacity-50"
             >
               {creating ? 'Création…' : 'Créer le compte'}
