@@ -120,9 +120,13 @@ export default function LandingPage() {
       {/* ── Header ────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-ardoise/90 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <span className="text-xl font-semibold tracking-tight">
+          <Link
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-xl font-semibold tracking-tight transition-opacity hover:opacity-80"
+          >
             Percepta <span className="text-accent">ID</span>
-          </span>
+          </Link>
           <nav className="hidden sm:flex items-center gap-6 text-sm text-slate-400">
             <a href="#fonctionnalites" className="hover:text-white transition-colors">
               Fonctionnalités

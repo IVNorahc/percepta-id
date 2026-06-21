@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useAlerts } from '../../lib/alerts'
 import { useAlertNotifier } from '../../lib/alertNotifications'
@@ -101,19 +101,37 @@ function NavLinks({
   )
 }
 
-function Brand({ logoUrl, name, sizeCls }: { logoUrl: string | null; name: string; sizeCls: string }) {
+function Brand({
+  logoUrl,
+  name,
+  sizeCls,
+  onClick,
+}: {
+  logoUrl: string | null
+  name: string
+  sizeCls: string
+  onClick?: () => void
+}) {
   return (
-    <span className="flex items-center gap-2 min-w-0">
+    <Link
+      to="/dashboard"
+      onClick={onClick}
+      aria-label="Aller au tableau de bord"
+      className="flex items-center gap-2 min-w-0 transition-opacity hover:opacity-80"
+    >
       <StorageImage src={logoUrl} alt="" className="h-7 w-7 shrink-0 rounded object-contain" />
       <span className={`${sizeCls} font-display font-bold tracking-tight truncate`}>{name}</span>
-    </span>
+    </Link>
   )
 }
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  // Bouton retour sur toutes les pages sauf l'accueil de l'app (dashboard).
+  const showBack = location.pathname !== '/dashboard'
   const { alerts } = useAlerts()
   useAlertNotifier(alerts)
   const { settings } = useSettings()
@@ -170,7 +188,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
         }`}
       >
         <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
-          <Brand logoUrl={settings.logoUrl} name={settings.companyName} sizeCls="text-xl" />
+          <Brand
+            logoUrl={settings.logoUrl}
+            name={settings.companyName}
+            sizeCls="text-xl"
+            onClick={() => setMobileOpen(false)}
+          />
           <button
             onClick={() => setMobileOpen(false)}
             className="text-slate-400 hover:text-white"
@@ -212,7 +235,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </header>
 
         <main className="flex-1 overflow-y-auto">
-          <div className="p-4 sm:p-8">{children}</div>
+          <div className="p-4 sm:p-8">
+            {showBack && (
+              <button
+                onClick={() => navigate(-1)}
+                className="mb-5 inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-ardoise px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-accent hover:text-accent"
+              >
+                <span aria-hidden>←</span> Retour
+              </button>
+            )}
+            {children}
+          </div>
         </main>
       </div>
     </div>
