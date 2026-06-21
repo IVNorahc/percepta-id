@@ -7,54 +7,54 @@ const FEATURES = [
     icon: '📷',
     title: 'Scan CNI / Passeport',
     description:
-      "Identification instantanée des employés, prestataires et sous-traitants par reconnaissance optique. Zéro saisie manuelle, zéro erreur d'identité.",
+      "Identification instantanée par reconnaissance optique. Zéro saisie manuelle, zéro erreur d'identité.",
   },
   {
     icon: '🏭',
-    title: "Gestion des zones d'extraction",
+    title: 'Gestion des zones',
     description:
-      "Contrôle d'accès par zone (extraction, traitement, administration) avec alertes automatiques sur les zones à risque.",
+      "Contrôle d'accès par zone avec alertes automatiques pour les périmètres à risque.",
   },
   {
     icon: '⚠️',
     title: 'Alertes temps réel',
     description:
-      "Détection automatique : dépassement de durée de présence, accès prolongé en zone d'extraction dangereuse.",
+      'Détection automatique : dépassement de durée de présence, accès en zone dangereuse.',
   },
   {
     icon: '📊',
     title: 'Rapports automatiques',
     description:
-      'Exports PDF et Excel à la demande. Analyse par période, par zone, par catégorie de personnel (employés, sous-traitants).',
+      'Exports PDF et Excel à la demande. Analyse par période, par zone, par catégorie de personnel.',
   },
   {
     icon: '🎫',
     title: 'Badge numérique',
     description:
-      "QR code unique pour chaque visiteur ou personnel sous-traitant, vérifiable instantanément par les agents de sécurité du site.",
+      'QR code unique généré pour chaque visiteur, vérifiable instantanément par le personnel de sécurité.',
   },
   {
     icon: '🔒',
-    title: 'Conformité minière',
+    title: 'Conformité légale',
     description:
-      'Registre électronique conforme au Code minier sénégalais. Données chiffrées et auditables pour vos audits de sécurité.',
+      'Registre électronique conforme au Code minier sénégalais. Données chiffrées et auditables.',
   },
 ]
 
 const BEFORE = [
-  "Registres papier perdus ou illisibles à l'entrée des zones d'extraction",
-  "Erreurs de saisie sur l'identité des prestataires et sous-traitants",
-  "Aucune traçabilité des accès en cas d'incident sur site",
-  'Rapports de présence chronophages à produire manuellement',
-  'Impossible de savoir qui se trouve en zone à risque en temps réel',
+  'Registres papier perdus ou illisibles',
+  'Erreurs fréquentes de saisie manuelle',
+  "Aucune traçabilité en cas d'incident",
+  'Rapports chronophages à produire manuellement',
+  'Impossible de vérifier une présence en temps réel',
 ]
 
 const AFTER = [
-  "Scan CNI / passeport en moins de 5 secondes à l'entrée du site",
-  'Identification fiable des employés, prestataires et sous-traitants',
-  "Historique horodaté de chaque accès aux zones d'extraction",
-  'Rapports de présence générés en un clic, exportables (PDF / Excel)',
-  'Vue en direct du personnel présent, y compris en zones dangereuses',
+  'Scan automatique en moins de 5 secondes',
+  'Identification fiable par reconnaissance optique',
+  'Historique complet et horodaté de chaque accès',
+  'Rapports générés en un clic, exportables',
+  'Vue en direct de tout le personnel présent sur site',
 ]
 
 const CERTS = [
@@ -159,17 +159,17 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-32 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent tracking-wide mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            Solution dédiée aux sites miniers et d'extraction
+            Solution dédiée aux industries extractives
           </span>
           <h1 className="text-4xl sm:text-6xl font-bold tracking-tight leading-tight">
             Percepta ID — Sécurisez et gérez
             <br />
-            <span className="text-accent">les accès de votre site minier</span>
+            <span className="text-accent">les accès de votre site</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Solution numérique de contrôle d'accès et de gestion du personnel conçue pour les
-            exigences des sites d'extraction. Du scan CNI aux rapports automatisés, en passant par
-            les alertes temps réel sur les zones à risque.
+            Solution numérique de contrôle d'accès et de gestion du personnel pour les industries
+            extractives. Du scan CNI aux rapports automatisés, en passant par les alertes temps
+            réel.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
@@ -208,7 +208,7 @@ export default function LandingPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight">Fini les registres papier</h2>
             <p className="mt-3 text-lg text-slate-400">
-              Percepta ID transforme la gestion des accès sur vos sites miniers et d'extraction
+              Percepta ID transforme la gestion des accès sur vos sites extractifs
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden border border-white/10">
@@ -254,7 +254,7 @@ export default function LandingPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight">Tout ce dont vous avez besoin</h2>
             <p className="mt-3 text-lg text-slate-400">
-              Six fonctionnalités clés pour sécuriser et optimiser votre site minier
+              Six fonctionnalités clés pour sécuriser et optimiser votre site
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

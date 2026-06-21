@@ -1,7 +1,7 @@
 {
   "name": "Percepta ID",
   "short_name": "Percepta ID",
-  "description": "Plateforme de contrôle d'accès et gestion du personnel pour sites miniers",
+  "description": "Plateforme de contrôle d'accès et gestion du personnel pour entreprises",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0F172A",

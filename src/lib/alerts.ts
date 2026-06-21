@@ -29,7 +29,7 @@ export const DEFAULT_THRESHOLDS: AlertThresholds = {
   warningH: 8,
   criticalH: 12,
   dangerH: 4,
-  dangerZones: ['Zone dangereuse'],
+  dangerZones: ['Zone Dangereuse'],
 }
 
 export function formatDurationH(hours: number): string {
@@ -227,7 +227,7 @@ export function useAlerts(refreshIntervalMs = 5 * 60 * 1000) {
         warningH: d.threshold_warning_h ?? 8,
         criticalH: d.threshold_critical_h ?? 12,
         dangerH: d.threshold_danger_h ?? 4,
-        dangerZones: dangerZones.length > 0 ? dangerZones : ['Zone dangereuse'],
+        dangerZones: dangerZones.length > 0 ? dangerZones : ['Zone Dangereuse'],
       }
     }
 
