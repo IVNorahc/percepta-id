@@ -167,9 +167,9 @@ export default function LandingPage() {
             <span className="text-accent">les accès de votre site</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Solution numérique de contrôle d'accès et de gestion du personnel pour les industries
-            extractives. Du scan CNI aux rapports automatisés, en passant par les alertes temps
-            réel.
+            Solution numérique de contrôle d'accès et de gestion du personnel, spécialement
+            pensée pour les industries extractives. Du scan CNI aux rapports automatisés, en
+            passant par les alertes temps réel.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
