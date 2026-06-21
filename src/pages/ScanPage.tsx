@@ -18,11 +18,13 @@ function fileToBase64(file: File): Promise<string> {
 }
 
 function Field({
-  id, label, required, value, onChange, placeholder, type = 'text',
+  id, label, required, value, onChange, placeholder, type = 'text', suggestions,
 }: {
   id: string; label: string; required?: boolean; value: string
   onChange: (v: string) => void; placeholder?: string; type?: string
+  suggestions?: string[]
 }) {
+  const listId = suggestions ? `${id}-list` : undefined
   return (
     <div>
       <label htmlFor={id} className="block text-sm text-slate-300">
@@ -30,12 +32,29 @@ function Field({
       </label>
       <input
         id={id} type={type} required={required} value={value} placeholder={placeholder}
+        list={listId}
         onChange={(e) => onChange(e.target.value)}
         className="mt-1 w-full rounded-md border border-white/10 bg-nuit px-3 py-2 text-sm text-white outline-none placeholder:text-slate-600 focus:border-accent"
       />
+      {suggestions && (
+        <datalist id={listId}>
+          {suggestions.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
+      )}
     </div>
   )
 }
+
+// Suggestions de motif adaptées aux sites miniers (champ libre, non contraignant).
+const REASON_SUGGESTIONS = [
+  'Visite technique',
+  'Maintenance équipement',
+  'Livraison',
+  'Inspection sécurité',
+  'Prestataire',
+]
 
 export default function ScanPage() {
   const { settings } = useSettings()
@@ -472,7 +491,8 @@ export default function ScanPage() {
               required
               value={reason}
               onChange={setReason}
-              placeholder="Livraison, intervention technique, réunion..."
+              placeholder="Visite technique, maintenance, inspection sécurité..."
+              suggestions={REASON_SUGGESTIONS}
             />
             <div>
               <label htmlFor="zone" className="block text-sm text-slate-300">
