@@ -1,40 +1,57 @@
-import { useState, type FormEvent, type ChangeEvent } from 'react'
+import { useState, type FormEvent, type ChangeEvent, type ComponentType } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import {
+  BlueprintGrid,
+  HeroIllustration,
+  IconBell,
+  IconChart,
+  IconQr,
+  IconScan,
+  IconShield,
+  IconZones,
+  PaperStackIllustration,
+  QrPhoneIllustration,
+  ShieldIllustration,
+} from '../components/landing/illustrations'
 
-const FEATURES = [
+const FEATURES: Array<{
+  Icon: ComponentType<{ className?: string }>
+  title: string
+  description: string
+}> = [
   {
-    icon: '📷',
+    Icon: IconScan,
     title: 'Scan CNI / Passeport',
     description:
       "Identification instantanée par reconnaissance optique. Zéro saisie manuelle, zéro erreur d'identité.",
   },
   {
-    icon: '🏭',
+    Icon: IconZones,
     title: 'Gestion des zones',
     description:
       "Contrôle d'accès par zone avec alertes automatiques pour les périmètres à risque.",
   },
   {
-    icon: '⚠️',
+    Icon: IconBell,
     title: 'Alertes temps réel',
     description:
       'Détection automatique : dépassement de durée de présence, accès en zone dangereuse.',
   },
   {
-    icon: '📊',
+    Icon: IconChart,
     title: 'Rapports automatiques',
     description:
       'Exports PDF et Excel à la demande. Analyse par période, par zone, par catégorie de personnel.',
   },
   {
-    icon: '🎫',
+    Icon: IconQr,
     title: 'Badge numérique',
     description:
       'QR code unique généré pour chaque visiteur, vérifiable instantanément par le personnel de sécurité.',
   },
   {
-    icon: '🔒',
+    Icon: IconShield,
     title: 'Conformité légale',
     description:
       'Registre électronique conforme au Code minier sénégalais. Données chiffrées et auditables.',
@@ -158,38 +175,51 @@ export default function LandingPage() {
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-accent/8 rounded-full blur-3xl" />
+          <BlueprintGrid className="absolute inset-0 h-full w-full opacity-[0.04]" />
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-accent/10 rounded-full blur-3xl" />
+          <div className="absolute top-32 -right-24 w-80 h-80 rounded-full border border-accent/10" />
+          <div className="absolute top-52 -right-10 w-52 h-52 rounded-full border border-accent/10" />
         </div>
-        <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-32 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent tracking-wide mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            Solution dédiée aux industries extractives
-          </span>
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight leading-tight">
-            Percepta ID — Sécurisez et gérez
-            <br />
-            <span className="text-accent">les accès de votre site</span>
-          </h1>
-          <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            Solution numérique de contrôle d'accès et de gestion du personnel, spécialement
-            pensée pour les industries extractives. Du scan CNI aux rapports automatisés, en
-            passant par les alertes temps réel.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#contact"
-              className="w-full sm:w-auto rounded-lg bg-accent px-8 py-4 text-base font-semibold text-white hover:bg-accent-sombre transition-colors text-center"
-            >
-              Demander une démo gratuite
-            </a>
-            <Link
-              to="/login"
-              className="w-full sm:w-auto rounded-lg border border-white/20 px-8 py-4 text-base font-semibold text-white hover:border-accent hover:text-accent transition-colors text-center"
-            >
-              Accéder à la plateforme
-            </Link>
+        <div className="relative max-w-6xl mx-auto px-6 py-20 sm:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent tracking-wide mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                Solution dédiée aux industries extractives
+              </span>
+              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold tracking-tight leading-tight">
+                Sécurisez et gérez
+                <br />
+                <span className="text-accent">les accès de votre site</span>
+              </h1>
+              <p className="mt-6 text-lg sm:text-xl text-slate-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                Solution numérique de contrôle d'accès et de gestion du personnel, spécialement
+                pensée pour les industries extractives. Du scan CNI aux rapports automatisés, en
+                passant par les alertes temps réel.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <a
+                  href="#contact"
+                  className="w-full sm:w-auto rounded-lg bg-accent px-8 py-4 text-base font-semibold text-white hover:bg-accent-sombre transition-colors text-center"
+                >
+                  Demander une démo gratuite
+                </a>
+                <Link
+                  to="/login"
+                  className="w-full sm:w-auto rounded-lg border border-white/20 px-8 py-4 text-base font-semibold text-white hover:border-accent hover:text-accent transition-colors text-center"
+                >
+                  Accéder à la plateforme
+                </Link>
+              </div>
+            </div>
+
+            {/* Illustration */}
+            <div className="relative order-first lg:order-last">
+              <HeroIllustration className="w-full h-auto max-w-md mx-auto" />
+            </div>
           </div>
-          <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-slate-500">
+
+          <div className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-slate-500">
             <span className="flex items-center gap-2">
               <span className="text-green-400">✓</span> Conforme Code minier sénégalais
             </span>
@@ -217,6 +247,7 @@ export default function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden border border-white/10">
             <div className="bg-red-500/5 border-b md:border-b-0 md:border-r border-white/10 p-8">
+              <PaperStackIllustration className="h-28 w-auto mb-6" />
               <div className="flex items-center gap-3 mb-6">
                 <span className="rounded-full bg-red-500/20 w-9 h-9 flex items-center justify-center text-red-400 font-bold">
                   ✗
@@ -233,6 +264,7 @@ export default function LandingPage() {
               </ul>
             </div>
             <div className="bg-accent/5 p-8">
+              <QrPhoneIllustration className="h-28 w-auto mb-6" />
               <div className="flex items-center gap-3 mb-6">
                 <span className="rounded-full bg-accent/20 w-9 h-9 flex items-center justify-center text-accent font-bold">
                   ✓
@@ -253,7 +285,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Fonctionnalités ───────────────────────────────────────────── */}
-      <section id="fonctionnalites" className="border-t border-white/10">
+      <section id="fonctionnalites" className="border-t border-white/10 bg-gradient-to-b from-transparent via-transparent to-ardoise/40">
         <div className="max-w-6xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight">Tout ce dont vous avez besoin</h2>
@@ -262,16 +294,18 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURES.map((feat) => (
+            {FEATURES.map(({ Icon, title, description }) => (
               <div
-                key={feat.title}
+                key={title}
                 className="group rounded-xl border border-white/10 bg-ardoise p-6 hover:border-accent/40 hover:bg-accent/5 transition-all duration-200"
               >
-                <div className="text-3xl mb-4">{feat.icon}</div>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-accent/20 bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                  <Icon className="h-6 w-6" />
+                </div>
                 <h3 className="font-semibold text-white group-hover:text-accent transition-colors">
-                  {feat.title}
+                  {title}
                 </h3>
-                <p className="mt-2 text-sm text-slate-400 leading-relaxed">{feat.description}</p>
+                <p className="mt-2 text-sm text-slate-400 leading-relaxed">{description}</p>
               </div>
             ))}
           </div>
@@ -279,9 +313,14 @@ export default function LandingPage() {
       </section>
 
       {/* ── Conformité légale ─────────────────────────────────────────── */}
-      <section id="conformite" className="border-t border-white/10 bg-ardoise">
-        <div className="max-w-6xl mx-auto px-6 py-20">
+      <section id="conformite" className="relative overflow-hidden border-t border-white/10 bg-ardoise">
+        <div className="absolute inset-0 pointer-events-none">
+          <BlueprintGrid className="absolute inset-0 h-full w-full opacity-[0.04]" />
+          <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-green-500/5 rounded-full blur-3xl" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
+            <ShieldIllustration className="mx-auto mb-6 h-32 w-auto" />
             <span className="inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-xs font-medium text-green-400 tracking-wide mb-4">
               Conformité réglementaire
             </span>
