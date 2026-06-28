@@ -321,7 +321,7 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
             <ShieldIllustration className="mx-auto mb-6 h-32 w-auto" />
-            <span className="inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1.5 text-xs font-medium text-green-400 tracking-wide mb-4">
+            <span className="inline-block rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-medium text-accent tracking-wide mb-4">
               Conformité réglementaire
             </span>
             <h2 className="text-3xl font-bold tracking-tight">
@@ -336,9 +336,9 @@ export default function LandingPage() {
             {CERTS.map((cert) => (
               <div
                 key={cert.code}
-                className="rounded-xl border border-green-500/20 bg-green-500/5 p-6 text-center hover:border-green-500/40 transition-colors"
+                className="rounded-xl border border-accent/20 bg-accent/5 p-6 text-center hover:border-accent/40 transition-colors"
               >
-                <div className="text-xl font-bold text-green-400 mb-3">{cert.code}</div>
+                <div className="text-xl font-bold text-accent mb-3">{cert.code}</div>
                 <p className="text-xs text-slate-400 leading-relaxed">{cert.label}</p>
               </div>
             ))}
