@@ -297,7 +297,7 @@ export default function LandingPage() {
             {FEATURES.map(({ Icon, title, description }) => (
               <div
                 key={title}
-                className="group rounded-xl border border-white/10 bg-ardoise p-6 hover:border-accent/40 hover:bg-accent/5 transition-all duration-200"
+                className="group rounded-xl border border-white/10 bg-ardoise p-6 hover:border-accent/40 hover:bg-accent/5 transition-all duration-200 border-l-2 border-l-accent/40"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-accent/20 bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
                   <Icon className="h-6 w-6" />
