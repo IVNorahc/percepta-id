@@ -2,7 +2,23 @@
   "permissions": {
     "allow": [
       "Bash(git config *)",
-      "Bash(node --check scripts/migrate-storage-tenant.mjs)"
+      "Bash(node --check scripts/migrate-storage-tenant.mjs)",
+      "PowerShell(npx tsc --noEmit -p tsconfig.app.json)",
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(git check-ignore supabase/.temp)",
+      "PowerShell(git check-ignore .env.local)",
+      "PowerShell(git add src/App.tsx src/components/layout/AppLayout.tsx src/hooks/useIdleTimer.ts src/lib/alertNotifications.ts src/pages/NotFoundPage.tsx supabase/functions/send-alert-notification/index.ts supabase/migrations/0011_alert_notifications.sql)",
+      "PowerShell(git push origin main 2>&1)",
+      "PowerShell(git add src/App.tsx src/pages/LoginPage.tsx src/pages/AdminPage.tsx supabase/functions/admin-percepta/index.ts supabase/migrations/0012_admin_provisioned_users.sql)",
+      "PowerShell(git add src/pages/AdminPage.tsx supabase/functions/admin-percepta/index.ts supabase/migrations/0013_single_company_lock.sql)",
+      "PowerShell(git check-ignore dist)",
+      "PowerShell(git checkout ccc9fe5 -- src/pages/LandingPage.tsx src/lib/settings.ts src/lib/alerts.ts src/pages/ScanPage.tsx)",
+      "PowerShell(git checkout ccc9fe5 -- index.html public/manifest.json)",
+      "PowerShell(git add src/pages/LandingPage.tsx)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Microsoft\\percepta-id\\.git",
+      "c:\\Users\\Microsoft\\percepta-id\\.git"
     ]
   }
 }

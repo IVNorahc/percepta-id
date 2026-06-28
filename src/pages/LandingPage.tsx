@@ -215,7 +215,7 @@ export default function LandingPage() {
 
             {/* Illustration */}
             <div className="relative order-first lg:order-last">
-              <HeroIllustration className="w-full h-auto max-w-md mx-auto" />
+              <HeroIllustration className="w-full h-auto max-w-md mx-auto max-h-64 sm:max-h-none" />
             </div>
           </div>
 
