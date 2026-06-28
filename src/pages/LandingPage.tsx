@@ -219,7 +219,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-slate-500">
+          <div className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-slate-300">
             <span className="flex items-center gap-2">
               <span className="text-green-400">✓</span> Conforme Code minier sénégalais
             </span>
